@@ -1,0 +1,38 @@
+.dropdown {
+    position: relative;
+    display: inline-block;
+    width: 200px;
+}
+
+.dropdown-button {
+    width: 100px;
+    padding: 10px;
+    background-color: chocolate;
+    border: 2px solid #000;
+    cursor: pointer;
+    text-align: left;
+}
+
+.dropdown-options {
+    display: none; /*we don't see this at the begin */
+    position: absolute;
+    top: 100%;
+    left: 0%;
+    width: 100%;
+    background-color: aliceblue;
+    border: 1px solid #000;
+    z-index: 1000;
+}
+
+.dropdown-option {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.dropdown-option:hover {
+    background-color: darkgrey;
+}
+
+.dropdown.open .dropdown-options {
+    display: block;
+}
