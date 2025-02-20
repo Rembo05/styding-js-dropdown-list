@@ -2,6 +2,8 @@ const dropdownButton = document.getElementById("dropdownButton");
 const dropdownOptions = document.getElementById("dropdownOptions");
 const dropdown = document.getElementById("customDropdown");
 
+const OPTIONS_DATA_URL = "resources/data/data.json";
+
 let metaData;
 
 function getDropdownOptionCode(value, text) {
@@ -10,7 +12,7 @@ function getDropdownOptionCode(value, text) {
 
 async function loadDropdownOptions() {
   try {
-    const response = await fetch("data.json");
+    const response = await fetch(OPTIONS_DATA_URL);
     if (!response.ok) {
       throw new Error(`Error loading data: ${response.status}`);
     }
