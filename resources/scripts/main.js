@@ -4,34 +4,57 @@ const dropdown = document.getElementById("customDropdown");
 
 const OPTIONS_DATA_URL = "resources/data/data.json";
 
-let metaData;
-
-function getDropdownOptionCode(value, text) {
-  return `<div class ='dropdown-option' data-value = '${value}'>${text}</div>`;
+function createOption(optionData) {
+  return `<div class ='dropdown-option' data-value='${optionData.value}'>${optionData.text}</div>`;
 }
 
 async function loadDropdownOptions() {
   try {
     const response = await fetch(OPTIONS_DATA_URL);
+
     if (!response.ok) {
       throw new Error(`Error loading data: ${response.status}`);
     }
 
-    metaData = await response.json();
-    createOptions();
+    return await response.json();
+
   } catch {
     console.error("Error loading data from json", error.message);
   }
 }
 
-function createOptions() {
-  console.log(metaData);
+async function createOptions() {
+  const optionsData = await loadDropdownOptions();
 
-  for (let option of metaData) {
-    const optionHTML = getDropdownOptionCode(option.value, option.text);
-    dropdownOptions.insertAdjacentHTML("beforeend", optionHTML);
+  for (let option of optionsData) {
+    dropdownOptions.insertAdjacentHTML("beforeend", createOption(option));
   }
 }
+
+function getClosestDropdownOption(event) {
+  return event.target.closest(".dropdown-option");
+}
+
+dropdownOptions.addEventListener("click", (event) => {
+  event.stopPropagation();
+  const option = getClosestDropdownOption(event);
+
+  if (!option) {
+    return;
+  }
+
+  dropdownButton.textContent = option.textContent;
+  dropdown.classList.remove("open");
+});
+
+document.addEventListener("click", () => {
+  dropdown.classList.remove("open");
+  // const allDropdowns = [];
+
+  // allDropdowns.forEach(dropdown => {
+  //   dropdown.close();
+  // })
+});
 
 dropdownButton.addEventListener("click", (event) => {
   event.stopPropagation();
@@ -39,23 +62,4 @@ dropdownButton.addEventListener("click", (event) => {
   dropdown.classList.toggle("open");
 });
 
-dropdownOptions.addEventListener("click", (event) => {
-  event.stopPropagation();
-  const option = event.target.closest(".dropdown-option"); //checking click on option
-
-  if (option) {
-    const selectedValue = option.dataset.value;
-    const selectedText = option.textContent;
-
-    dropdownButton.textContent = selectedText;
-    dropdown.classList.remove("open");
-  }
-});
-
-document.addEventListener("click", () => {
-  console.log("CLOSE");
-
-  dropdown.classList.remove("open");
-});
-
-loadDropdownOptions();
+createOptions();
